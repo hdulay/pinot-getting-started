@@ -1,21 +1,17 @@
-# pinot-getting-started
+# Pinot Getting Started
 
-# Alpine Docker
+
+```mermaid
+flowchart LR
+
+Producer-->k[Apache Kafka]-->p[Apache Pinot]
+```
+
 
 ```bash
-git clone https://raw.githubusercontent.com/confluentinc/confluent-kafka-python/
-
-docker build --no-cache \
-    -t startree-dev/kafkapy-base:latest \
-    -t startree-dev/kafkapy-base:v0.1 \
-    -f Dockerfile.alpine .
-
-
-docker build --no-cache \
-    -t startree-dev/kafkapy-producer:latest \
-    -t startree-dev/kafkapy-producer:v0.1 \
-    -f Dockerfile .
+docker compose up -d
 ```
+
 
 ## Trouble Shooting
 
