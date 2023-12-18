@@ -17,13 +17,16 @@ class Generator:
 
 class RatingGenerator(Generator):
 
-    def __init__(self, df):
+    def __init__(self):
         Faker.seed(0)
         self.faker = Faker()
-        self.df = df
+        path = os.getenv('DATA')
+        if(path is None):
+            raise Exception("need to movies.json file")
+        self.df = pd.read_json(path, lines=True)
     
     def next(self):
-        key = random.randint(df['movieId'].min(), df['movieId'].max())
+        key = random.randint(self.df['movieId'].min(), self.df['movieId'].max())
         data = json.dumps({
               "movieId": key,
               "rating": round(random.uniform(0.0, 1.0), 2),
@@ -61,12 +64,10 @@ if __name__== "__main__":
     bootstrap = os.getenv('BOOTSTRAPSERVER','kafka:9092')
     topic = os.getenv('TOPIC','data')
     limit = int(os.getenv('LIMIT', 100000))
-    path = os.getenv('DATA', 'data/movies.json')
-    df = pd.read_json(path, lines=True)
     
     logging.basicConfig(level=logging.INFO)
     p = Producer({'bootstrap.servers': bootstrap})
-    gen = RatingGenerator(df)
+    gen = RatingGenerator()
 
     send(p, topic=topic, gen=gen, limit=limit)
 
